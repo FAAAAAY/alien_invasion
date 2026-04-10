@@ -101,6 +101,7 @@ class AilenInvasion:
 
     def _start_game(self):
         """Запускает игру"""
+        self.settings.initialize_dynamic_settings()
         self.stats.reset_stats()
         self.stats.game_active = True
 
@@ -156,6 +157,7 @@ class AilenInvasion:
         if not self.aliens:
             self.bullets.empty()
             self._create_fleet()   
+            self.settings.increase_speed()
 
     def _update_aliens(self):
         """Обновляет позиции всех пришельцев во флоте"""

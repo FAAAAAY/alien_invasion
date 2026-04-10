@@ -5,6 +5,7 @@ import pygame
 from settings import Settings
 from ship import Ship
 from bullet import Bullet
+from alien import Alien
 
 class AilenInvasion:
     """Класс для управления ресурсами и поведением игры"""
@@ -20,6 +21,9 @@ class AilenInvasion:
         pygame.display.set_caption("Ailen Invasion")
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
+        self.aliens = pygame.sprite.Group()
+
+        self._create_fleet()
 
     def run_game(self):
         """Запуск основного цикла игры"""
@@ -29,6 +33,10 @@ class AilenInvasion:
             self._update_bullets()
             self._update_screen()
 
+    def _create_fleet(self):
+        """Создание флота вторжения"""
+        alien = Alien(self)
+        self.aliens.add(alien)
 
     def _check_events(self):
         """Обрабатывает нажатия клавиш и события мыши"""
@@ -78,7 +86,8 @@ class AilenInvasion:
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
-
+        self.aliens.draw(self.screen)
+        
         pygame.display.flip()           
                     
 

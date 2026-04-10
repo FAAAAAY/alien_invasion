@@ -16,7 +16,11 @@ class Scoreboard():
 
         self.text_color = (30, 30, 30)
         self.font = pygame.font.SysFont(None, 48)
+        
+        self.prep_images()
 
+    def prep_images(self):
+        """Подготавливает изображения"""
         self.prep_score()
         self.prep_high_score()
         self.prep_level()
@@ -66,7 +70,7 @@ class Scoreboard():
         self.screen.blit(self.high_score_image, self.high_score_rect)      
         self.screen.blit(self.level_image, self.level_rect)               
         self.ships.draw(self.screen)
-        
+
     def check_high_score(self):
         """Проверяет, появился ли новый рекорд"""
         if self.stats.score > self.stats.high_score:

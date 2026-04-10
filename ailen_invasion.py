@@ -103,11 +103,9 @@ class AilenInvasion:
     def _start_game(self):
         """Запускает игру"""
         self.settings.initialize_dynamic_settings()
-        self.stats.reset_stats()
+        self.stats.reset_stats() 
         self.stats.game_active = True
-        self.sb.prep_score()
-        self.sb.prep_level()
-        self.sb.prep_ships()
+        self.sb.prep_images()
 
         self.aliens.empty()
         self.bullets.empty()
@@ -165,12 +163,16 @@ class AilenInvasion:
             self.sb.check_high_score()
 
         if not self.aliens:
-            self.bullets.empty()
-            self._create_fleet()   
-            self.settings.increase_speed()
+            self._start_new_level()
 
-            self.stats.level += 1
-            self.sb.prep_level()
+    def _start_new_level(self):
+        """Начинает новый уровень"""
+        self.bullets.empty()
+        self._create_fleet()   
+        self.settings.increase_speed()
+
+        self.stats.level += 1
+        self.sb.prep_level()
 
     def _update_aliens(self):
         """Обновляет позиции всех пришельцев во флоте"""
@@ -194,7 +196,7 @@ class AilenInvasion:
         """Обрабатывает столкновение корабля с пришельцем"""
         if self.stats.ships_left > 0:
             self.stats.ships_left -= 1
-            self.sb.prep_ships()
+            self.sb.prep_ships( )
         
             self.aliens.empty()
             self.bullets.empty()
@@ -204,7 +206,8 @@ class AilenInvasion:
 
             sleep(0.5)
         else:         
-            self.stats.game_active = False   
+            self.stats.game_active = False 
+            self.stats.record()  
             pygame.mouse.set_visible(True)
 
     def _update_screen(self):

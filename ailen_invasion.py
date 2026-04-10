@@ -5,6 +5,7 @@ import pygame
 
 from settings import Settings
 from game_stats import GameStats
+from button import Button
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
@@ -28,6 +29,8 @@ class AilenInvasion:
 
         self._create_fleet()
 
+        self.play_button = Button(self, 'Play')
+
     def run_game(self):
         """Запуск основного цикла игры"""
         while True:
@@ -37,7 +40,7 @@ class AilenInvasion:
                 self.ship.update()
                 self._update_bullets()
                 self._update_aliens()
-                
+
             self._update_screen()
 
     def _create_fleet(self):
@@ -84,7 +87,30 @@ class AilenInvasion:
             elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)     
             elif event.type == pygame.KEYUP:
-                self._check_keyup_events(event)            
+                self._check_keyup_events(event)  
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                self._check_play_button(mouse_pos)    
+
+    def _check_play_button(self, mouse_pos):
+        """Запускает новую игру при нажатии кнопки Play"""
+        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+        if button_clicked and not self.stats.game_active:
+            self._start_game()
+
+
+    def _start_game(self):
+        """Запускает игру"""
+        self.stats.reset_stats()
+        self.stats.game_active = True
+
+        self.aliens.empty()
+        self.bullets.empty()
+
+        self._create_fleet()
+        self.ship.center_ship()
+
+        pygame.mouse.set_visible(False)
 
     def _check_keydown_events(self, event):
         """Реагирует на нажатия клавиш"""
@@ -95,7 +121,9 @@ class AilenInvasion:
         elif event.key == pygame.K_q:
             sys.exit()   
         elif event.key == pygame.K_SPACE:
-            self._fire_bullet()                    
+            self._fire_bullet()      
+        elif event.key == pygame.K_p:     
+            self._start_game()                            
 
     def _check_keyup_events(self, event):
         """Реагирует на отпускание клавиш"""   
@@ -161,6 +189,7 @@ class AilenInvasion:
             sleep(0.5)
         else:         
             self.stats.game_active = False   
+            pygame.mouse.set_visible(True)
 
     def _update_screen(self):
         """Обновляет изображения на экране и отображает новый экран"""
@@ -170,11 +199,12 @@ class AilenInvasion:
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
 
+        if not self.stats.game_active:
+            self.play_button.draw_button()
+
         pygame.display.flip()           
                     
 
 if __name__ == '__main__':
     ai = AilenInvasion()
     ai.run_game()
-
-

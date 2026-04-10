@@ -11,7 +11,7 @@ from ship import Ship
 from bullet import Bullet
 from alien import Alien
 
-class AilenInvasion:
+class AlienInvasion:
     """Класс для управления ресурсами и поведением игры"""
 
     def __init__(self):
